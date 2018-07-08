@@ -1,6 +1,6 @@
 {
   "name": "@tlaukkan/aframe-arcade-controls-component",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A-Frame Arcade Controls Component",
   "main": "dist/index.js",
   "scripts": {
@@ -51,6 +51,5 @@
     "webpack-cli": "^3.0.2",
     "webpack-dev-server": "^3.1.4"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
