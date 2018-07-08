@@ -39,6 +39,7 @@ npm run start:dev
 ### Update
 
 ---
+    npm run dist
     npm version patch
     npm publish
 ---
