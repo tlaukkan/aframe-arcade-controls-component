@@ -1,0 +1,17 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true,
+    "mocha": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module"
+  },  "rules": {
+    "no-console": "off",
+    "no-unused-vars": ["error", { "args": "none" }]
+  }
+}

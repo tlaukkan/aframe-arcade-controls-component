@@ -1,0 +1,56 @@
+{
+  "name": "@tlaukkan/aframe-arcade-controls-component",
+  "version": "0.0.1",
+  "description": "A-Frame Arcade Controls Component",
+  "main": "dist/index.js",
+  "scripts": {
+    "lint": "eslint src test *.js",
+    "start:dev": "webpack-dev-server --open",
+    "test:node": "mocha --exit ./test/node/*.js ./test/common/*.js",
+    "test:browser": "karma start karma.config.js --browsers FirefoxHeadless",
+    "test": "npm run test:node && npm run test:browser",
+    "dist": "webpack --display-modules"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tlaukkan/aframe-arcade-controls-component.git"
+  },
+  "keywords": [
+    "aframe",
+    "arcade",
+    "controls",
+    "component"
+  ],
+  "author": "Tommi Laukkanen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tlaukkan/aframe-arcade-controls-component/issues"
+  },
+  "homepage": "https://github.com/tlaukkan/aframe-arcade-controls-component#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^8.0.0",
+    "browserify": "^16.2.2",
+    "chai": "*",
+    "copy-webpack-plugin": "^4.5.1",
+    "eslint": "^4.19.1",
+    "karma": "^2.0.2",
+    "karma-browserify": "^5.2.0",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-firefox-launcher": "^1.1.0",
+    "karma-ie-launcher": "^1.0.0",
+    "karma-mocha": "^1.3.0",
+    "mocha": "*",
+    "serve-static": "^1.13.2",
+    "uuid": "^3.2.1",
+    "watchify": "^3.11.0",
+    "webpack": "^4.15.1",
+    "webpack-cli": "^3.0.2",
+    "webpack-dev-server": "^3.1.4"
+  },
+  "dependencies": {
+  }
+}

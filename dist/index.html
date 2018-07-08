@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>A-Frame Mesh Adapter Demo</title>
+    <meta name="description" content="Hello, WebVR! - Networked A-Frame Mesh Networking Demo">
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+    <script src="https://unpkg.com/@tlaukkan/aframe-atmosphere-component@0.0.2/atmosphere.js"></script>
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.1/dist/aframe-extras.min.js"></script>
+    <!--<script src="terrain.js"></script>
+    <!--<script src="https://unpkg.com/@tlaukkan/aframe-tiny-terrain-component@0.0.4/terrain.js"></script>-->
+</head>
+<body>
+
+<script>
+    window.TINY_TERRAIN.heightFunctions.set('hill-with-sine-wave', (x, y) => {
+        const d = Math.sqrt(x*x + y*y);
+        return 1 * Math.sin(Math.PI * (d * d) / 100) / (1 + d * d / 100) + 20 + 20 * ( -1 + 1 / (1 + d * d / 500));
+    });
+
+    window.TINY_TERRAIN.colorFunctions.set('linear', (y, colorPalette, paletteRangeMin, paletteRangeMax, paletteAccuracy, colorCache) => {
+        const i = ((y - paletteRangeMin)/(paletteRangeMax-paletteRangeMin)).toFixed(paletteAccuracy);
+        if (!colorCache.has(i)) {
+            colorCache.set(i, colorPalette(i));
+        }
+        return colorCache.get(i);
+    });
+</script>
+
+<a-scene light="defaultLightsEnabled: false">
+    <a-entity light="type: ambient; color: #BBB; intensity: 0.3"></a-entity>
+    <a-entity light="type: directional; color: #FFF; intensity: 0.7" position=" 0.3 0.05 -1"></a-entity>
+
+    <a-tiny-terrain id="terrain" height-function="hill-with-sine-wave" radius-edge-count="100" edge-length = "1.5" color-function="linear" palette = "#4f654e, #606f4e, #818553, #9b9557, #bab269, #c4bc74" palette-accuracy="3" palette-range-min="0" palette-range-max="20" ></a-tiny-terrain>
+
+    <a-entity id="player" atmosphere="lightPosition: 0.3 0.05 -1;" progressive-controls movement-controls="fly: true; speed: 0.3" position="0 22 0">
+        <a-entity camera look-controls></a-entity><a-entity class="right-controller"></a-entity><a-entity class="left-controller"></a-entity>
+    </a-entity>
+
+</a-scene>
+
+<script>
+
+    var player = document.getElementById('player');
+    var terrain = document.getElementById('terrain');
+    setInterval(() => {
+        var position = player.getAttribute('position')
+        if (position) {
+            terrain.setAttribute('terrain', 'x:' + position.x + ';y:0;z:' + position.z + ';')
+        }
+    }, 200);
+
+</script>
+
+
+</body>
+</html>
