@@ -134,7 +134,11 @@ class ArcadeController {
                 delta = -distanceFromBottom
                 this.airborne = false
             } else {
-                delta = freeDropDelta
+                if (distanceFromBottom && distanceFromBottom < 0) {
+                    delta = -freeDropDelta;
+                } else {
+                    delta = freeDropDelta;
+                }
                 this.airborne = true
             }
         } else {
