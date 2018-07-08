@@ -4,7 +4,7 @@ Keyboard controls for walking, jumping and colliding on all meshes on scene.
 
 ## Demo
 
-https://aframe-arcade-controls-denemo.glitch.me/
+https://aframe-arcade-controls-demo.glitch.me/
 
 <!-- Remix Button -->
 <a href="https://glitch.com/edit/#!/remix/aframe-arcade-controls-denemo">
