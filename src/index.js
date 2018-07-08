@@ -27,7 +27,7 @@ class ArcadeController {
         this.jumpKey = this.data.jumpKey;
 
         // Utility objects
-        this.collediableCrawler = new CollidableCrawler(el.sceneEl.object3D);
+        this.collediableCrawler = new CollidableCrawler(this.el.object3D, el.sceneEl.object3D);
         this.raycaster = new THREE.Raycaster();
 
         // Constants
@@ -45,6 +45,11 @@ class ArcadeController {
         this.pressed = new Map(); // Pressed keys
 
         // Reused vector variables.
+        this.centerOfMassPosition = new THREE.Vector3(0, 0, 0); // Center of mass for collision checks
+        this.centerOfMassPosition.x = this.el.object3D.position.x;
+        this.centerOfMassPosition.y = this.el.object3D.position.y + this.height / 2;
+        this.centerOfMassPosition.z = this.el.object3D.position.z;
+
         this.cameraDirection = new THREE.Vector3(0, 0, 0);
         this.xzDirection = new THREE.Vector3(0, 0, 0);
         this.xzDeltaDirection = new THREE.Vector3(0, 0, 0);
@@ -67,8 +72,8 @@ class ArcadeController {
         this.time = time;
 
         let collidables = this.collediableCrawler.collideables();
-        this.updateY(timeDelta, collidables);
         this.updateXZ(timeDelta, collidables);
+        this.updateY(timeDelta, collidables);
     }
 
     updateXZ(timeDelta, collidables) {
@@ -81,6 +86,8 @@ class ArcadeController {
         if (forward || backward || left || right) {
             let delta = this.movementSpeed * timeDelta / 1000.0;
             this.computeXZDirectionFromCamera();
+            this.centerOfMassPosition.x = this.el.object3D.position.x;
+            this.centerOfMassPosition.z = this.el.object3D.position.z;
             this.xzDeltaDirection.copy(this.xzDirection);
             this.xzDeltaOppositeDirection.copy(this.xzDirection);
             this.xzDeltaOppositeDirection.multiplyScalar(-1);
@@ -130,8 +137,8 @@ class ArcadeController {
 
         if (distanceToNearestBelow && !this.jumping) {
             let distanceFromBottom = distanceToNearestBelow - this.height / 2;
-            if (Math.abs(freeDropDelta) > Math.abs(distanceFromBottom) || Math.abs(distanceFromBottom) < 0.05) {
-                delta = -distanceFromBottom
+            if (Math.abs(freeDropDelta) > Math.abs(distanceFromBottom) || Math.abs(distanceFromBottom) < 0.1) {
+                delta = -distanceFromBottom;
                 this.airborne = false
             } else {
                 if (distanceFromBottom && distanceFromBottom < 0) {
@@ -156,7 +163,9 @@ class ArcadeController {
             this.jumping = false;
         }
 
-        position.y += delta;
+        this.centerOfMassPosition.y = this.centerOfMassPosition.y + delta;
+
+        position.y = this.centerOfMassPosition.y - this.height/2;
     }
 
     computeXZDirectionFromCamera() {
@@ -169,7 +178,7 @@ class ArcadeController {
     findDistanceToNearest(rayDirection, objects) {
         this.raycaster.near = 0;
         this.raycaster.far = this.height;
-        this.raycaster.set(this.el.object3D.position, rayDirection);
+        this.raycaster.set(this.centerOfMassPosition, rayDirection);
         var intersects = this.raycaster.intersectObjects(objects);
         if (intersects.length > 0) {
             return intersects[0].distance;
@@ -187,7 +196,8 @@ class ArcadeController {
 }
 
 class CollidableCrawler {
-    constructor(root) {
+    constructor(self,root) {
+        this.self = self;
         this.root = root;
         this.queuedChildren = [];
         this.queuedChildren.push(this.root.children);
@@ -220,6 +230,9 @@ class CollidableCrawler {
         if (this.children.length > this.childrenIndex) {
             const current = this.children[this.childrenIndex];
             this.childrenIndex++;
+            if (current === this.self) {
+                return;
+            }
             this.queuedChildren.push(current.children);
             if (current.type === 'Mesh') {
                 this.collideablesTemporary.push(current)
